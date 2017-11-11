@@ -11,13 +11,6 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/icon.png",
-                    "menuIcon": true,
-                    "name": "ICON",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/reset.png",
                     "name": "RESET",
                     "targetPlatforms": null,
@@ -32,6 +25,13 @@
                 {
                     "file": "images/mode.png",
                     "name": "MODE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "ICON",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 }
