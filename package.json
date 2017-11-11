@@ -1,0 +1,53 @@
+{
+    "author": "Andreas Gwilt",
+    "dependencies": {},
+    "keywords": [],
+    "name": "multidice",
+    "pebble": {
+        "displayName": "MultiDice",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/reset.png",
+                    "name": "RESET",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/next.png",
+                    "name": "NEXT",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/mode.png",
+                    "name": "MODE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "diorite",
+            "emery"
+        ],
+        "uuid": "167c707e-1c84-418d-bb1a-d145b7770e01",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "0.1.0"
+}
