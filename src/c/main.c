@@ -3,7 +3,7 @@
 static Window *s_main_window;
 static TextLayer *s_show_layer;
 static TextLayer *s_info_layer;
-static ActionBarLayer *action_bar;
+static ActionBarLayer *s_action_bar;
 static StatusBarLayer *s_status_bar;
 
 static bool s_get_letter = true;
@@ -11,7 +11,7 @@ static char s_buffer[] = "A";
 static char s_alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static char *s_info_line = "Random Letter\n(99 left)";
 static size_t s_lnum = 26;
-static GBitmap *icon_change_mode, *icon_get_random, *icon_reset_letters;
+static GBitmap *s_icon_change_mode, *s_icon_get_random, *s_icon_reset_letters;
 static const uint32_t s_reset_segments[] = { 50, 50, 50, 50, 50 };
 static VibePattern s_reset_pattern = {
 	.durations = s_reset_segments,
@@ -40,6 +40,18 @@ static void main_window_load(Window *window)
 	Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
 	
+	// Initialise action bar
+	s_action_bar = action_bar_layer_create();
+	action_bar_layer_add_to_window(s_action_bar, window);
+	action_bar_layer_set_click_config_provider(s_action_bar, click_config_provider);
+	// Set the icons:
+	s_icon_change_mode = gbitmap_create_with_resource(RESOURCE_ID_MODE);
+	s_icon_get_random = gbitmap_create_with_resource(RESOURCE_ID_NEXT);
+	s_icon_reset_letters = gbitmap_create_with_resource(RESOURCE_ID_RESET);
+	action_bar_layer_set_icon(s_action_bar, BUTTON_ID_UP, s_icon_change_mode);
+	action_bar_layer_set_icon(s_action_bar, BUTTON_ID_SELECT, s_icon_get_random);
+	action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_icon_reset_letters);
+	
 	// Status bar setup
 	s_status_bar = status_bar_layer_create();
 	layer_set_frame(status_bar_layer_get_layer(s_status_bar), GRect(0, 0, bounds.size.w-ACTION_BAR_WIDTH, STATUS_BAR_LAYER_HEIGHT));
@@ -59,18 +71,6 @@ static void main_window_load(Window *window)
 	text_layer_set_text_color(s_info_layer, GColorBlack);
 	text_layer_set_font(s_info_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
 	text_layer_set_text_alignment(s_info_layer, GTextAlignmentCenter);
-	
-	// Initialise action bar
-	action_bar = action_bar_layer_create();
-	action_bar_layer_add_to_window(action_bar, window);
-	action_bar_layer_set_click_config_provider(action_bar, click_config_provider);
-	// Set the icons:
-	icon_change_mode = gbitmap_create_with_resource(RESOURCE_ID_MODE);
-	icon_get_random = gbitmap_create_with_resource(RESOURCE_ID_NEXT);
-	icon_reset_letters = gbitmap_create_with_resource(RESOURCE_ID_RESET);
-	action_bar_layer_set_icon(action_bar, BUTTON_ID_UP, icon_change_mode);
-	action_bar_layer_set_icon(action_bar, BUTTON_ID_SELECT, icon_get_random);
-	action_bar_layer_set_icon(action_bar, BUTTON_ID_DOWN, icon_reset_letters);
 
 	// Add it as a child layer to the Window's root layer
 	layer_add_child(window_layer, status_bar_layer_get_layer(s_status_bar));
@@ -80,10 +80,14 @@ static void main_window_load(Window *window)
 
 static void main_window_unload(Window *window)
 {
-	// Destroy TextLayer
+	// Detach layers
+	layer_remove_from_parent(text_layer_get_layer(s_show_layer));
+	layer_remove_from_parent(text_layer_get_layer(s_info_layer));
+	action_bar_layer_remove_from_window(s_action_bar);
+	// remove
 	text_layer_destroy(s_show_layer);
 	text_layer_destroy(s_info_layer);
-	action_bar_layer_destroy(action_bar);
+	action_bar_layer_destroy(s_action_bar);
 }
 
 static void reset_alphabet()
@@ -181,6 +185,9 @@ static void init() {
 static void deinit() {
 	// Destroy Window
 	window_destroy(s_main_window);
+	gbitmap_destroy(s_icon_change_mode);
+	gbitmap_destroy(s_icon_get_random);
+	gbitmap_destroy(s_icon_reset_letters);
 }
 
 int main(void) {
